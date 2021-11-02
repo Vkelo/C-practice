@@ -8,12 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Jypeli.NET" Version="10.*" />
-        <PackageReference Include="Jypeli.FarseerPhysics.NET" Version="1.0.*" />
+        <PackageReference Include="Jypeli.NET" Version="10.1.6" />
+        <PackageReference Include="Jypeli.FarseerPhysics.NET" Version="1.0.11" />
     </ItemGroup>
 
     <ItemGroup>
       <None Update="Content\kentta1.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\grass.jpeg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\eurooppa.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\amerikkalainen.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
