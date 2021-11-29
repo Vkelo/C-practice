@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Jypeli;
 using Jypeli.Assets;
+using Jypeli.Widgets;
 
 /// <summary>
 /// @author Anton Kelo
-/// @10.11.2021
+/// @29.11.2021
 /// peli, jossa amerikkalaiset jalkapallot saalistavat eurooppalaista jalkapalloa
 /// Pelaaja yrittää syödä amerikkalaisia jalkapalloja ennen kuin ne saavuttavat eurooppalaisen jalkapallon
 /// </summary>
@@ -24,6 +25,7 @@ public class Harjoituspeli : PhysicsGame
     PhysicsObject vihu3;
     PhysicsObject vihu4;
 
+    EasyHighScore topLista = new EasyHighScore();
 
     public override void Begin()
     {
@@ -68,7 +70,7 @@ public class Harjoituspeli : PhysicsGame
 
 
         Mouse.ListenOn(kohta1, MouseButton.Left, ButtonState.Pressed, AloitaPeli, null);
-        //Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, ParhaatPisteet, null);
+        Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, ParhaatPisteet, null);
         Mouse.ListenOn(kohta3, MouseButton.Left, ButtonState.Pressed, ConfirmExit, null);
         Mouse.ListenOn(kohta4, MouseButton.Left, ButtonState.Pressed, Ohjeet, null);
 
@@ -95,9 +97,20 @@ public class Harjoituspeli : PhysicsGame
                 kohta.TextColor = Color.Black;
             }
         }
+
+        void ParhaatPisteet()
+        {
+            ClearAll();
+            topLista.Show();
+            Timer.SingleShot(5, Begin);
+        }
     }
 
-    void Ohjeet()
+
+    /// <summary>
+    /// Näyttö, jossa kerrotaan ohjeet ja annetaan muutamia asetuksia
+    /// </summary>
+    private void Ohjeet()
     {
         ClearAll();
 
@@ -170,17 +183,103 @@ public class Harjoituspeli : PhysicsGame
         }
 
 
-        //Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, Äänenvoimakkuus, null);
-        //Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, Skinit, null);
+        Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, Aanenvoimakkuus, null);
+        Mouse.ListenOn(kohta3, MouseButton.Left, ButtonState.Pressed, Skinit, null);
         //Mouse.ListenOn(kohta4, MouseButton.Left, ButtonState.Pressed, Näppäimet, null);
         Mouse.ListenOn(kohta5, MouseButton.Left, ButtonState.Pressed, Begin, null);
 
+        
+        void Skinit()
+        {
+            ClearAll();
+            
+
+            List<Label> SkiniKohdat;
+
+            Label otsikko2 = new("SKINIT");
+            otsikko.Y = 150;
+            otsikko.Font = new Font(40, true);
+            Add(otsikko);
+
+            SkiniKohdat = new List<Label>();
+
+            Label kohta6 = new("Leopardi");
+            kohta6.Position = new Vector(0, 40);
+            kohta6.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
+            kohta6.Font.Size = 30;
+            SkiniKohdat.Add(kohta6);
+
+            Label kohta7 = new("Markku Kanerva");
+            kohta7.Position = new Vector(0, 0);
+            kohta7.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
+            kohta7.Font.Size = 30;
+            SkiniKohdat.Add(kohta7);
+
+            Label kohta8 = new("Seepra");
+            kohta8.Position = new Vector(0, -40);
+            kohta8.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
+            kohta8.Font.Size = 30;
+            SkiniKohdat.Add(kohta8);
+
+            Label kohta9 = new("JYU");
+            kohta9.Position = new Vector(0, -80);
+            kohta9.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
+            kohta9.Font.Size = 30;
+            SkiniKohdat.Add(kohta9);
+
+            Label kohta10 = new("Takaisin");
+            kohta10.Position = new Vector(0, -150);
+            kohta10.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
+            kohta10.Font.Size = 30;
+            SkiniKohdat.Add(kohta10);
+
+            Label kohta11 = new Label
+            {
+                Position = new Vector(100, 40),
+                Height = 25,
+                Width = 25,
+                Image = LoadImage("eurooppa.png")
+            };
+            SkiniKohdat.Add(kohta11);
+
+            foreach (Label Skinikohta in SkiniKohdat)
+            {
+                Add(Skinikohta);
+            }
+            Mouse.ListenOn(kohta10, MouseButton.Left, ButtonState.Pressed, Ohjeet, null);
+        }
+
+        void Aanenvoimakkuus()
+        {
+            DoubleMeter voimakkuus = new(1, 0, 1);
+            voimakkuus.Changed += SaadaVoimakkuutta;
+
+            Slider liukusaadin = new(200, 20);
+            liukusaadin.BindTo(voimakkuus);
+            liukusaadin.X = 250;
+            liukusaadin.Y = 0;
+
+            liukusaadin.Color = Color.Pink;
+            liukusaadin.Knob.Color = Color.Black;
+            liukusaadin.Track.Color = Color.Blue;
+            liukusaadin.BorderColor = Color.Red;
+
+            Add(liukusaadin);
+        }
+
+        void SaadaVoimakkuutta(double vanhaArvo, double uusiArvo)
+        {
+            MasterVolume = 0 + uusiArvo;
+        }
+
     }
 
+
     /// <summary>
-    /// 
+    /// Luo tason 1 tapahtumakäskyt, kutsuu aliohjelmia jotka luo kentän, ohjaimet ja viholliset.
+    /// Määrittelee voittaako pelaaja vai ei.
     /// </summary>
-    void AloitaPeli()
+    private void AloitaPeli()
     {
         ClearAll();
 
@@ -192,10 +291,7 @@ public class Harjoituspeli : PhysicsGame
         AsetaOhjaimet();
 
 
-        VihuPohja1();
-        VihuPohja2();
-        VihuPohja3();
-        VihuPohja4();
+        Taso1Vihut();
 
         AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(pisteet, +1));
         AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(VihunTerveys, -1));
@@ -233,9 +329,12 @@ public class Harjoituspeli : PhysicsGame
                 jalkapallo.Destroy();
                 pelaaja.Destroy();
 
-                Timer.SingleShot(2.0, Hävisit);
+                Timer.SingleShot(10.0, Hävisit);
+                topLista.EnterAndShow(pisteet.Value);
             }
+            
         }
+
 
         void PelaajaVoittaa (PhysicsObject tormaaja, PhysicsObject kohde)
         {
@@ -251,10 +350,11 @@ public class Harjoituspeli : PhysicsGame
         }
     }
 
+
     /// <summary>
     /// Luo lopetusnäytön, on kutsuttu kun pelaaja häviää
     /// </summary>
-    void Hävisit()
+    private void Hävisit()
     {
         ClearAll();
 
@@ -296,13 +396,13 @@ public class Harjoituspeli : PhysicsGame
         Mouse.ListenOn(kohta2, HoverState.Enter, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta2, true);
         Mouse.ListenOn(kohta2, HoverState.Exit, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta2, false);
 
-        Mouse.ListenOn(kohta3, HoverState.Enter, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta3, true);
-        Mouse.ListenOn(kohta3, HoverState.Exit, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta3, false);
+        //Mouse.ListenOn(kohta3, HoverState.Enter, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta3, true);
+        //Mouse.ListenOn(kohta3, HoverState.Exit, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta3, false);
 
         Mouse.ListenOn(kohta4, HoverState.Enter, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta4, true);
         Mouse.ListenOn(kohta4, HoverState.Exit, MouseButton.None, ButtonState.Irrelevant, ValikossaLiikkuminen, null, kohta4, false);
 
-        void ValikossaLiikkuminen(Label kohta, bool paalla)
+        static void ValikossaLiikkuminen(Label kohta, bool paalla)
         {
             if (paalla)
             {
@@ -321,9 +421,13 @@ public class Harjoituspeli : PhysicsGame
 
     }
 
-    void Voitit()
+
+    /// <summary>
+    /// Luo voitit-näytön jos pelaaja pääsee eteenpäin
+    /// </summary>
+    private void Voitit()
     {
-        ClearAll();
+        ClearGameObjects();
         
 
         List<Label> valikonKohdat;
@@ -335,15 +439,13 @@ public class Harjoituspeli : PhysicsGame
 
         valikonKohdat = new List<Label>();
 
-        //Label kohta1 = pisteet;
-
-        Label kohta2 = new("Aloita uusi peli");
+        Label kohta2 = new("Jatka seuraavaan tasoon");
         kohta2.Position = new Vector(0, 50);
         kohta2.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
         kohta2.Font.Size = 50;
         valikonKohdat.Add(kohta2);
 
-        Label kohta3 = new("Parhaat pisteet");
+        Label kohta3 = new("Aloita alusta");
         kohta3.Position = new Vector(0, 0);
         kohta3.Font = LoadFont("HVD_Comic_Serif_Pro.otf");
         kohta3.Font.Size = 40;
@@ -382,21 +484,19 @@ public class Harjoituspeli : PhysicsGame
             }
         }
 
-        Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, AloitaPeli, null);
-        //Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, ParhaatPisteet, null);
+        Mouse.ListenOn(kohta2, MouseButton.Left, ButtonState.Pressed, Taso2, null);
+        Mouse.ListenOn(kohta3, MouseButton.Left, ButtonState.Pressed, AloitaPeli, null);
         Mouse.ListenOn(kohta4, MouseButton.Left, ButtonState.Pressed, ConfirmExit, null);
 
     }
 
+
     /// <summary>
-    /// 
+    /// Luo pelaajan, jalkapallon ja kentän
     /// </summary>
-    void LuoKentta()
+    private void LuoKentta()
     {
 
-        /// <summary>
-        /// 
-        /// </summary>
         TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
         ruudut.SetTileMethod('*', LuoSeina);
         ruudut.Execute(20.0, 20.0);
@@ -405,20 +505,16 @@ public class Harjoituspeli : PhysicsGame
         Level.Background.TileToLevel();
         Camera.ZoomToLevel();
 
-        /// <summary>
-        /// Luodaan pelin keskustaan jalkapallo
-        /// </summary>
         jalkapallo = LuoJalkapallo(0.0, 0.0);
 
-        /// <summary>
-        /// Luodaan pelin päähenkilö, joka metsästää amerikkalaisia jalkapalloja
-        /// </summary>
         LuoPelaaja(Level.Right - 50.0, 0.0);
-
     }
 
 
-    void VihuPohja1()
+    /// <summary>
+    /// Luo viholliset tasoon yksi
+    /// </summary>
+    private void Taso1Vihut()
     {
         vihu1 = LuoVihu(Level.Right - 45.0, 150.0);
         PathFollowerBrain polkuaivo = new PathFollowerBrain(30);
@@ -431,9 +527,8 @@ public class Harjoituspeli : PhysicsGame
             new Vector(0.0, 0.0)
             };
         polkuaivo.Path = polku;
-    }
-    void VihuPohja2()
-    {
+
+
         vihu2 = LuoVihu(-210, 150.0);
         PathFollowerBrain polkuaivo2 = new PathFollowerBrain(30);
         vihu2.Brain = polkuaivo2;
@@ -445,9 +540,8 @@ public class Harjoituspeli : PhysicsGame
             new Vector(0.0, 0.0)
             };
         polkuaivo2.Path = polku2;
-    }
-    void VihuPohja3()
-    {
+
+
         vihu3 = LuoVihu(-220.0, -150.0);
         PathFollowerBrain polkuaivo3 = new(30);
         vihu3.Brain = polkuaivo3;
@@ -462,9 +556,7 @@ public class Harjoituspeli : PhysicsGame
             new Vector(0.0, 0.0)
             };
         polkuaivo3.Path = polku3;
-    }
-    void VihuPohja4()
-    {
+
         vihu4 = LuoVihu(210.0, -150.0);
         PathFollowerBrain polkuaivo4 = new(30);
         vihu4.Brain = polkuaivo4;
@@ -480,14 +572,14 @@ public class Harjoituspeli : PhysicsGame
         polkuaivo4.Path = polku4;
     }
 
-
+    
     /// <summary>
     /// Luodaan pelissä liikuteltava pelaaja
     /// </summary>
     /// <param name="x">Leveys</param>
     /// <param name="y">Korkeus</param>
     /// <returns>pelaajan pääohjelmaan</returns>
-    PhysicsObject LuoPelaaja(double x, double y)
+    private PhysicsObject LuoPelaaja(double x, double y)
     {
         pelaaja = new(15.0, 15.0);
         pelaaja.Shape = Shape.Ellipse;
@@ -508,7 +600,7 @@ public class Harjoituspeli : PhysicsGame
     /// <param name="paikka">sijainti kentällä</param>
     /// <param name="x">leveys</param>
     /// <param name="y">korkeus</param>
-    void LuoSeina(Vector paikka, double x, double y)
+    private void LuoSeina(Vector paikka, double x, double y)
     {
         PhysicsObject seina = PhysicsObject.CreateStaticObject(x, y);
         seina.Position = paikka;
@@ -525,7 +617,7 @@ public class Harjoituspeli : PhysicsGame
     /// <param name="y">korkeus</param>
     /// <returns></returns>
     ///
-    PhysicsObject LuoVihu(double x, double y)
+    private PhysicsObject LuoVihu(double x, double y)
     {
         PhysicsObject vihu = new(15.0, 15.0);
         vihu.Shape = Shape.Diamond;
@@ -537,13 +629,14 @@ public class Harjoituspeli : PhysicsGame
         return vihu;
     }
 
+
     /// <summary>
-    /// Luodaan pelin keskelle jalkapallo
+    /// Luodaan pelin keskelle jalkapallo, jota vihut yrittävät metsästää
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    PhysicsObject LuoJalkapallo(double x, double y)
+    private PhysicsObject LuoJalkapallo(double x, double y)
     {
         Pallo jalkapallo = new(30.0, 30.0, 3)
         {
@@ -558,10 +651,11 @@ public class Harjoituspeli : PhysicsGame
         return jalkapallo;
     }
 
+
     /// <summary>
     /// Luodaan laskuri siitä, kuinka monta elämää jalkapallolla on jäljellä
     /// </summary>
-    Label LuoElamaLaskuri(IntMeter e)
+    private Label LuoElamaLaskuri(IntMeter e)
     {
         Label elamanaytto = new();
         elamanaytto.X = Screen.Left + 350;
@@ -574,10 +668,11 @@ public class Harjoituspeli : PhysicsGame
         return elamanaytto;
     }
 
+
     /// <summary>
     /// Luodaan pistelaskuri siitä, kuinka monta vihua pelaaja on syönyt.
     /// </summary>
-    void LuoPistelaskuri(IntMeter p)
+    private void LuoPistelaskuri(IntMeter p)
     {
         Label pistenaytto = new();
         pistenaytto.X = Screen.Left + 150;
@@ -589,6 +684,8 @@ public class Harjoituspeli : PhysicsGame
         Add(pistenaytto);
         
     }
+
+
     /// <summary>
     /// Luodaan ohjaimet yhdelle pelaajalle
     /// </summary>
@@ -609,6 +706,8 @@ public class Harjoituspeli : PhysicsGame
 
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -620,11 +719,30 @@ public class Harjoituspeli : PhysicsGame
     }
 
 
+    /// <summary>
+    /// luodaan taso 2, käytetään osittain tason 1 aliohjelmia
+    /// </summary>
+    private void Taso2()
+    {
+        ClearGameObjects();
+        
+        TileMap ruudut = TileMap.FromLevelAsset("kentta2.txt");
+        ruudut.SetTileMethod('*', LuoSeina);
+        ruudut.Execute(20.0, 20.0);
+        Level.CreateBorders(0.0, false);
+        Level.Background.Image = LoadImage("grass.jpeg");
+        Level.Background.TileToLevel();
+        Camera.ZoomToLevel();
+
+        jalkapallo = LuoJalkapallo(0.0, 0.0);
+        LuoPelaaja(Level.Right - 50.0, 0.0);
+        AsetaOhjaimet();
+    }
 }
 
 
 /// <summary>
-/// 
+/// Luodaan oma luokka jalkapallolle
 /// </summary>
 class Pallo : PhysicsObject
 {
@@ -638,3 +756,4 @@ class Pallo : PhysicsObject
         elamalaskuri.LowerLimit += delegate { this.Destroy(); };
     }
 }
+

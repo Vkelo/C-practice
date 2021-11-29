@@ -22,7 +22,7 @@
       <None Update="Content\eurooppa.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Content\amerikkalainen.png">
+      <None Update="Content\kenttä2.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
