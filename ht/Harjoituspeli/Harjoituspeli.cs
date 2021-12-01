@@ -24,8 +24,16 @@ public class Harjoituspeli : PhysicsGame
     PhysicsObject vihu2;
     PhysicsObject vihu3;
     PhysicsObject vihu4;
+    PhysicsObject vihu5;
+    PhysicsObject vihu6;
+    PhysicsObject vihu7;
+    PhysicsObject vihu8;
 
     EasyHighScore topLista = new EasyHighScore();
+
+    IntMeter pisteet = new(0);
+    IntMeter jalkapallonterveys = new(3);
+
 
     public override void Begin()
     {
@@ -105,6 +113,7 @@ public class Harjoituspeli : PhysicsGame
             Timer.SingleShot(5, Begin);
         }
     }
+
 
 
     /// <summary>
@@ -188,11 +197,11 @@ public class Harjoituspeli : PhysicsGame
         //Mouse.ListenOn(kohta4, MouseButton.Left, ButtonState.Pressed, Näppäimet, null);
         Mouse.ListenOn(kohta5, MouseButton.Left, ButtonState.Pressed, Begin, null);
 
-        
+
         void Skinit()
         {
             ClearAll();
-            
+
 
             List<Label> SkiniKohdat;
 
@@ -283,8 +292,6 @@ public class Harjoituspeli : PhysicsGame
     {
         ClearAll();
 
-        IntMeter pisteet = new(0);
-        IntMeter jalkapallonterveys = new(3);
         IntMeter VihunTerveys = new(3);
 
         LuoKentta();
@@ -293,30 +300,15 @@ public class Harjoituspeli : PhysicsGame
 
         Taso1Vihut();
 
-        AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(pisteet, +1));
-        AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(VihunTerveys, -1));
-        AddCollisionHandler(pelaaja, vihu1, PelaajaVoittaa);
-        AddCollisionHandler(pelaaja, vihu2, CollisionHandler.AddMeterValue(pisteet, +1));
-        AddCollisionHandler(pelaaja, vihu2, CollisionHandler.AddMeterValue(VihunTerveys, -1));
-        AddCollisionHandler(pelaaja, vihu2, PelaajaVoittaa);
-        AddCollisionHandler(pelaaja, vihu3, CollisionHandler.AddMeterValue(pisteet, +1));
-        AddCollisionHandler(pelaaja, vihu3, CollisionHandler.AddMeterValue(VihunTerveys, -1));
-        AddCollisionHandler(pelaaja, vihu3, PelaajaVoittaa);
-        AddCollisionHandler(pelaaja, vihu4, CollisionHandler.AddMeterValue(pisteet, +1));
-        AddCollisionHandler(pelaaja, vihu4, CollisionHandler.AddMeterValue(VihunTerveys, -1));
-        AddCollisionHandler(pelaaja, vihu4, PelaajaVoittaa);
+        AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu1, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu1, PelaajaVoittaa);
+        AddCollisionHandler(pelaaja, vihu2, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu2, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu2, PelaajaVoittaa);
+        AddCollisionHandler(pelaaja, vihu3, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu3, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu3, PelaajaVoittaa);
+        AddCollisionHandler(pelaaja, vihu4, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu4, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu4, PelaajaVoittaa);
 
-        AddCollisionHandler(jalkapallo, vihu1, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));
-        AddCollisionHandler(jalkapallo, vihu1, JalkapalloHäviää);
-
-        AddCollisionHandler(jalkapallo, vihu2, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));
-        AddCollisionHandler(jalkapallo, vihu2, JalkapalloHäviää);
-
-        AddCollisionHandler(jalkapallo, vihu3, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));
-        AddCollisionHandler(jalkapallo, vihu3, JalkapalloHäviää);
-
-        AddCollisionHandler(jalkapallo, vihu4, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));
-        AddCollisionHandler(jalkapallo, vihu4, JalkapalloHäviää);
+        AddCollisionHandler(jalkapallo, vihu1, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu1, JalkapalloHäviää);
+        AddCollisionHandler(jalkapallo, vihu2, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu2, JalkapalloHäviää);
+        AddCollisionHandler(jalkapallo, vihu3, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu3, JalkapalloHäviää);
+        AddCollisionHandler(jalkapallo, vihu4, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu4, JalkapalloHäviää);
 
         LuoPistelaskuri(pisteet);
         LuoElamaLaskuri(jalkapallonterveys);
@@ -332,11 +324,11 @@ public class Harjoituspeli : PhysicsGame
                 Timer.SingleShot(10.0, Hävisit);
                 topLista.EnterAndShow(pisteet.Value);
             }
-            
+
         }
 
 
-        void PelaajaVoittaa (PhysicsObject tormaaja, PhysicsObject kohde)
+        void PelaajaVoittaa(PhysicsObject tormaaja, PhysicsObject kohde)
         {
             kohde.Destroy();
             if (VihunTerveys == 0)
@@ -348,6 +340,8 @@ public class Harjoituspeli : PhysicsGame
                 Timer.SingleShot(1.0, Voitit);
             }
         }
+
+        Timer.SingleShot(20, Voitit);
     }
 
 
@@ -428,7 +422,7 @@ public class Harjoituspeli : PhysicsGame
     private void Voitit()
     {
         ClearGameObjects();
-        
+
 
         List<Label> valikonKohdat;
 
@@ -497,7 +491,7 @@ public class Harjoituspeli : PhysicsGame
     private void LuoKentta()
     {
 
-        TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
+        TileMap ruudut = TileMap.FromLevelAsset("kentta1");
         ruudut.SetTileMethod('*', LuoSeina);
         ruudut.Execute(20.0, 20.0);
         Level.CreateBorders(0.0, false);
@@ -525,7 +519,7 @@ public class Harjoituspeli : PhysicsGame
             new Vector(65.0, 150.0),
             new Vector(65.0, 10),
             new Vector(0.0, 0.0)
-            };
+        };
         polkuaivo.Path = polku;
 
 
@@ -538,7 +532,7 @@ public class Harjoituspeli : PhysicsGame
             new Vector(-210.0, 40.0),
             new Vector(-50.0, 40.0),
             new Vector(0.0, 0.0)
-            };
+        };
         polkuaivo2.Path = polku2;
 
 
@@ -554,7 +548,7 @@ public class Harjoituspeli : PhysicsGame
             new Vector(-50.0, -40.0),
             new Vector(-40.0, 0.0),
             new Vector(0.0, 0.0)
-            };
+        };
         polkuaivo3.Path = polku3;
 
         vihu4 = LuoVihu(210.0, -150.0);
@@ -568,11 +562,11 @@ public class Harjoituspeli : PhysicsGame
             new Vector(50.0, -30.0),
             new Vector(50.0, 0.0),
             new Vector(0.0, 0.0)
-            };
+        };
         polkuaivo4.Path = polku4;
     }
 
-    
+
     /// <summary>
     /// Luodaan pelissä liikuteltava pelaaja
     /// </summary>
@@ -587,7 +581,7 @@ public class Harjoituspeli : PhysicsGame
         pelaaja.Y = y;
         pelaaja.Restitution = 0.3;
         pelaaja.CanRotate = false;
-        pelaaja.Tag = "pelaaja";      
+        pelaaja.Tag = "pelaaja";
         //pelaaja.Image = LoadImage("");
         Add(pelaaja);
         return pelaaja;
@@ -655,7 +649,7 @@ public class Harjoituspeli : PhysicsGame
     /// <summary>
     /// Luodaan laskuri siitä, kuinka monta elämää jalkapallolla on jäljellä
     /// </summary>
-    private Label LuoElamaLaskuri(IntMeter e)
+    Label LuoElamaLaskuri(IntMeter e)
     {
         Label elamanaytto = new();
         elamanaytto.X = Screen.Left + 350;
@@ -682,7 +676,7 @@ public class Harjoituspeli : PhysicsGame
         pistenaytto.Title = "pisteet = ";
         pistenaytto.BindTo(p);
         Add(pistenaytto);
-        
+
     }
 
 
@@ -724,21 +718,129 @@ public class Harjoituspeli : PhysicsGame
     /// </summary>
     private void Taso2()
     {
-        ClearGameObjects();
-        
-        TileMap ruudut = TileMap.FromLevelAsset("kentta2.txt");
-        ruudut.SetTileMethod('*', LuoSeina);
-        ruudut.Execute(20.0, 20.0);
+        ClearAll();
+
+        IntMeter VihunTerveys = new(3);
+        LuoKentta2();
+
+        jalkapallo = LuoJalkapallo(0.0, 0.0);
+        LuoPelaaja(50.0, 0.0);
+        AsetaOhjaimet();
+
+        LuoElamaLaskuri(jalkapallonterveys);
+        LuoPistelaskuri(pisteet);
+        Taso2Vihut();
+
+        AddCollisionHandler(pelaaja, vihu5, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu5, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu5, PelaajaVoittaa2);
+        AddCollisionHandler(pelaaja, vihu6, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu6, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu6, PelaajaVoittaa2);
+        AddCollisionHandler(pelaaja, vihu7, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu7, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu7, PelaajaVoittaa2);
+        AddCollisionHandler(pelaaja, vihu8, CollisionHandler.AddMeterValue(pisteet, +1));AddCollisionHandler(pelaaja, vihu8, CollisionHandler.AddMeterValue(VihunTerveys, -1));AddCollisionHandler(pelaaja, vihu8, PelaajaVoittaa2);
+
+        AddCollisionHandler(jalkapallo, vihu5, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu5, JalkapalloHäviää2);
+        AddCollisionHandler(jalkapallo, vihu6, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu6, JalkapalloHäviää2);
+        AddCollisionHandler(jalkapallo, vihu7, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu7, JalkapalloHäviää2);
+        AddCollisionHandler(jalkapallo, vihu8, CollisionHandler.AddMeterValue(jalkapallonterveys, -1));AddCollisionHandler(jalkapallo, vihu8, JalkapalloHäviää2);
+
+        void JalkapalloHäviää2(PhysicsObject tormaaja, PhysicsObject kohde)
+        {
+            kohde.Destroy();
+            if (jalkapallonterveys == 0)
+            {
+                jalkapallo.Destroy();
+                pelaaja.Destroy();
+
+                Timer.SingleShot(10.0, Hävisit);
+                topLista.EnterAndShow(pisteet.Value);
+            }
+
+        }
+
+        void PelaajaVoittaa2(PhysicsObject tormaaja, PhysicsObject kohde)
+        {
+            kohde.Destroy();
+            if (VihunTerveys == 0)
+            {
+                vihu1.Destroy();
+                vihu2.Destroy();
+                vihu3.Destroy();
+                vihu4.Destroy();
+                Timer.SingleShot(1.0, Voitit);
+            }
+        }
+
+        Timer.SingleShot(10, Voitit);
+    }
+
+    private void Taso2Vihut()
+    {
+        vihu5 = LuoVihu(0.0, 150.0);
+        PathFollowerBrain polkuaivo5 = new PathFollowerBrain(30);
+        vihu5.Brain = polkuaivo5;
+        polkuaivo5.Active = true;
+        List<Vector> polku = new()
+        {
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 10),
+            new Vector(0.0, 0.0)
+        };
+        polkuaivo5.Path = polku;
+
+
+        vihu6 = LuoVihu(0.0, -150.0);
+        PathFollowerBrain polkuaivo6 = new PathFollowerBrain(30);
+        vihu6.Brain = polkuaivo6;
+        polkuaivo6.Active = true;
+        List<Vector> polku2 = new()
+        {
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0)
+        };
+        polkuaivo6.Path = polku2;
+
+
+        vihu7 = LuoVihu(-210.0, 0.0);
+        PathFollowerBrain polkuaivo7 = new(30);
+        vihu7.Brain = polkuaivo7;
+        polkuaivo7.Active = true;
+        List<Vector> polku3 = new()
+        {
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0)
+        };
+        polkuaivo7.Path = polku3;
+
+        vihu8 = LuoVihu(210.0, 0.0);
+        PathFollowerBrain polkuaivo8 = new(30);
+        vihu8.Brain = polkuaivo8;
+        polkuaivo8.Active = true;
+        List<Vector> polku4 = new()
+        {
+            new Vector(0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0),
+            new Vector(0.0, 0.0)
+        };
+        polkuaivo8.Path = polku4;
+    }
+
+    void LuoKentta2()
+    {
+        TileMap ruudut2 = TileMap.FromLevelAsset("kentta2");
+        ruudut2.SetTileMethod('*', LuoSeina);
+        ruudut2.Execute(20.0, 20.0);
         Level.CreateBorders(0.0, false);
         Level.Background.Image = LoadImage("grass.jpeg");
         Level.Background.TileToLevel();
         Camera.ZoomToLevel();
-
-        jalkapallo = LuoJalkapallo(0.0, 0.0);
-        LuoPelaaja(Level.Right - 50.0, 0.0);
-        AsetaOhjaimet();
     }
 }
+
 
 
 /// <summary>
