@@ -12,10 +12,15 @@ using Jypeli.Widgets;
 /// </summary>
 public class SavingTheBall : PhysicsGame
 {
-
+    /// <summary>
+    /// Molemmat fontit joita valikoissa käytetään
+    /// </summary>
     Font fontti = LoadFont("HVD_Comic_Serif_Pro.otf");
     Font fontti2 = Font.Default;
 
+    /// <summary>
+    /// Aliohjelmille näkyvät fysiikkaobjektit
+    /// </summary>
     private PhysicsObject jalkapallo;
     private PhysicsObject pelaaja;
     private PhysicsObject vihu1;
@@ -23,8 +28,14 @@ public class SavingTheBall : PhysicsGame
     private PhysicsObject vihu3;
     private PhysicsObject vihu4;
 
+    /// <summary>
+    /// Parhaiden pisteiden lista
+    /// </summary>
     EasyHighScore topLista = new EasyHighScore();
 
+    /// <summary>
+    /// Kolme muutettavaa ImtMeteriä mittaamaan oleellisia muuttujia
+    /// </summary>
     private IntMeter pisteet = new(0);
     private IntMeter Jalkapallonterveys = new(3);
     private IntMeter VihunTerveys = new(3);
