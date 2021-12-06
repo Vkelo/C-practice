@@ -34,6 +34,9 @@
       <None Update="Content\amerikkalainen.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Content\Jalkapallo.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     <ItemGroup>
       <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="SaveBalls.cs">
